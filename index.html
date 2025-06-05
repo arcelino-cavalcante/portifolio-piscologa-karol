@@ -345,7 +345,6 @@
             cursor: not-allowed;
         }
 
-        /* Removed my-booking as client won't see their own highlighted slots */
         #bookingConfirmation .form-input {
             margin-bottom: 1rem;
         }
@@ -354,7 +353,6 @@
             background-color: var(--color-primary-accent);
         }
 
-        /* Ensuring main action buttons use primary accent */
         #confirmBookingBtn,
         #closeModalBtn {
             padding: 0.6rem;
@@ -367,7 +365,6 @@
             margin-top: 1rem;
             text-align: center;
         }
-
 
         /* Admin Panel Styles */
         #adminLoginSection {
@@ -431,7 +428,6 @@
 
         @media (max-width: 640px) {
 
-            /* Tailwind's sm breakpoint */
             #adminBookingsTable th,
             #adminBookingsTable td {
                 padding: 0.5rem;
@@ -443,8 +439,6 @@
                 overflow-x: auto;
                 white-space: nowrap;
             }
-
-            /* For table horizontal scroll on small screens */
         }
 
         @media (max-width: 480px) {
@@ -908,9 +902,16 @@
 
     <!-- Firebase SDK -->
     <script type="module">
+        // ATENÇÃO KAROL: SUBSTITUA OS VALORES ABAIXO PELOS DO SEU PROJETO FIREBASE
+        // Vá em console.firebase.google.com -> Seu Projeto -> Configurações do Projeto (Engrenagem) -> Geral -> Seus apps -> App da Web
+        // Copie os valores EXATOS daqui.
         const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {
-            apiKey: "AIzaSyBhxWyBNC-PDiNAH7r8xfnABmiXpljasrU", authDomain: "agendamento-protifolios.firebaseapp.com", projectId: "agendamento-protifolios",
-            storageBucket: "agendamento-protifolios.firebasestorage.app", messagingSenderId: "75306290127", appId: "Y1:75306290127:web:adeefab360371490cee0ba"
+            apiKey: "AIzaSyBhxWyBNC-PDiNAH7r8xfnABmiXpljasrU",
+            authDomain: "agendamento-protifolios.firebaseapp.com",
+            projectId: "agendamento-protifolios",
+            storageBucket: "agendamento-protifolios.firebasestorage.app",
+            messagingSenderId: "75306290127",
+            appId: "1:75306290127:web:adeefab360371490cee0ba"
         };
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
 
@@ -921,15 +922,13 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
-        setLogLevel('debug');
+        setLogLevel('debug'); // Mantenha para debug durante o desenvolvimento
 
         let currentUserId = null;
         let allBookedSlots = new Map();
 
-        // KAROL: MUDE ESTA SENHA PARA ALGO SEGURO!
         const ADMIN_PASSWORD = "karol26@#";
         let isAdminLoggedIn = false;
-
 
         const karolAvailability = {
             weekdays: [1, 2, 3, 4, 5],
@@ -963,28 +962,25 @@
         const adminBookingsLoading = document.getElementById('adminBookingsLoading');
         const noAdminBookings = document.getElementById('noAdminBookings');
 
-
         let currentDate = new Date();
         let selectedDateForBooking = null;
         let selectedTimeForBooking = null;
         let allBookingsListenerUnsubscribe = null;
 
-
         onAuthStateChanged(auth, async (user) => {
-            authStatusLoadingDiv.classList.add('hidden');
+            if (authStatusLoadingDiv) authStatusLoadingDiv.classList.add('hidden');
             if (user) {
                 currentUserId = user.uid;
                 if (calendarAppDiv) calendarAppDiv.classList.remove('hidden');
-                if (adminLoginSection) adminLoginSection.classList.remove('hidden'); // Show admin login
+                if (adminLoginSection) adminLoginSection.classList.remove('hidden');
                 if (authStatusNotAuthenticatedDiv) authStatusNotAuthenticatedDiv.classList.add('hidden');
                 initializeCalendarApp();
             } else {
                 currentUserId = null;
-                isAdminLoggedIn = false; // Reset admin status on sign out
+                isAdminLoggedIn = false;
                 if (calendarAppDiv) calendarAppDiv.classList.add('hidden');
                 if (adminLoginSection) adminLoginSection.classList.add('hidden');
                 if (adminBookingsPanel) adminBookingsPanel.classList.add('hidden');
-
 
                 if (allBookingsListenerUnsubscribe) allBookingsListenerUnsubscribe();
 
@@ -998,7 +994,7 @@
                     console.error("Error during sign-in:", error);
                     if (authStatusNotAuthenticatedDiv) {
                         authStatusNotAuthenticatedDiv.classList.remove('hidden');
-                        authStatusNotAuthenticatedDiv.textContent = "Erro ao conectar com a agenda. Tente novamente mais tarde.";
+                        authStatusNotAuthenticatedDiv.textContent = "Erro ao conectar com a agenda. Verifique a configuração do Firebase e se o login anônimo está habilitado.";
                     }
                 }
             }
@@ -1015,27 +1011,33 @@
         }
 
         async function listenToAllBookedSlots() {
-            if (!currentUserId) return; // Ensure user is authenticated before listening
+            if (!currentUserId) {
+                console.warn("Tentativa de escutar slots sem usuário autenticado.");
+                return;
+            }
 
             const slotsColRef = collection(db, firestoreAgendaSlotsCollectionPath);
 
-            if (allBookingsListenerUnsubscribe) { // Detach previous listener if any
+            if (allBookingsListenerUnsubscribe) {
                 allBookingsListenerUnsubscribe();
+                console.log("Previous bookings listener detached.");
             }
 
-            allBookingsListenerUnsubscribe = onSnapshot(query(slotsColRef), (snapshot) => { // Removed orderBy for simplicity, sort client-side for admin table
+            allBookingsListenerUnsubscribe = onSnapshot(query(slotsColRef), (snapshot) => {
                 allBookedSlots.clear();
                 snapshot.forEach((docSnap) => {
                     allBookedSlots.set(docSnap.id, docSnap.data());
                 });
                 console.log("All booked slots updated:", allBookedSlots.size);
                 renderCalendar();
-                if (isAdminLoggedIn) { // Refresh admin table if admin is logged in
+                if (isAdminLoggedIn) {
                     renderAdminBookingsTable();
                 }
             }, (error) => {
                 console.error("Error fetching all booked slots: ", error);
+                if (calendarDaysContainer) calendarDaysContainer.innerHTML = `<p class="col-span-7 text-center text-red-500">Erro ao carregar horários da agenda.</p>`;
             });
+            console.log("Listening to all booked slots at:", firestoreAgendaSlotsCollectionPath);
         }
 
         function getSlotsStatusForDay(dayDateStr) {
@@ -1061,10 +1063,6 @@
         }
 
         function renderCalendar() {
-            // ... (Calendar rendering logic - largely unchanged, ensures it uses `allBookedSlots`)
-            // This function remains mostly the same as in the previous version,
-            // focusing on displaying day availability based on `allBookedSlots`.
-            // Key change: it doesn't highlight "my-booking" for clients since that view is removed.
             if (!monthYearDisplay || !calendarDaysContainer) return;
             calendarDaysContainer.innerHTML = '';
             const year = currentDate.getFullYear();
@@ -1202,14 +1200,13 @@
                 const docSnap = await getDoc(slotDocRef);
                 if (docSnap.exists()) {
                     alert("Desculpe, este horário foi agendado por outra pessoa. Por favor, escolha outro.");
-                    openTimeSlotModal(selectedDateForBooking); // Re-open modal to show updated slots
+                    openTimeSlotModal(selectedDateForBooking);
                 } else {
                     await setDoc(slotDocRef, {
                         bookedBy: currentUserId, clientName: clientName, bookedAt: serverTimestamp(),
                         date: dateStr, time: selectedTimeForBooking
                     });
                     alert(`Agendamento confirmado para ${clientName} em ${dateStr} às ${selectedTimeForBooking}! Para reagendar ou cancelar, por favor, entre em contato diretamente com a psicóloga.`);
-                    // No need to update allBookedSlots manually here, onSnapshot will do it.
                     timeSlotModal.classList.remove('active');
                 }
             } catch (error) {
@@ -1219,12 +1216,12 @@
             finally { confirmBookingBtn.disabled = false; confirmBookingBtn.textContent = "Confirmar Agendamento"; }
         });
 
-        // --- Admin Panel Logic ---
         if (adminLoginBtn) {
             adminLoginBtn.addEventListener('click', () => {
+                if (!adminPasswordInput || !adminLoginError || !adminLoginForm || !adminBookingsPanel) return;
                 if (adminPasswordInput.value === ADMIN_PASSWORD) {
                     isAdminLoggedIn = true;
-                    adminLoginForm.classList.add('hidden'); // Hide login form
+                    adminLoginForm.classList.add('hidden');
                     adminLoginError.classList.add('hidden');
                     adminBookingsPanel.classList.remove('hidden');
                     renderAdminBookingsTable();
@@ -1233,7 +1230,7 @@
                     isAdminLoggedIn = false;
                     adminBookingsPanel.classList.add('hidden');
                 }
-                adminPasswordInput.value = ''; // Clear password field
+                adminPasswordInput.value = '';
             });
         }
 
@@ -1246,7 +1243,7 @@
 
             const bookingsArray = Array.from(allBookedSlots.entries())
                 .map(([id, data]) => ({ id, ...data }))
-                .sort((a, b) => { // Sort by date and time
+                .sort((a, b) => {
                     const dateTimeA = new Date(`${a.date}T${a.time}`);
                     const dateTimeB = new Date(`${b.date}T${b.time}`);
                     return dateTimeA - dateTimeB;
@@ -1257,7 +1254,7 @@
             } else {
                 bookingsArray.forEach(booking => {
                     const row = adminBookingsTbody.insertRow();
-                    const dateObj = new Date(booking.date + "T" + booking.time + ":00Z"); // Treat date as UTC for consistency
+                    const dateObj = new Date(booking.date + "T" + booking.time + ":00Z");
 
                     row.insertCell().textContent = booking.clientName || 'N/A';
                     row.insertCell().textContent = dateObj.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric', timeZone: 'UTC' });
@@ -1281,7 +1278,6 @@
             try {
                 event.target.disabled = true; event.target.textContent = "Cancelando...";
                 await deleteDoc(doc(db, firestoreAgendaSlotsCollectionPath, bookingId));
-                // Snapshot listener will update the table and calendar
             } catch (error) {
                 console.error("Erro ao cancelar (admin): ", error);
                 alert("Não foi possível cancelar o agendamento (admin).");
@@ -1289,13 +1285,12 @@
             }
         }
 
-
         function initializeCalendarApp() {
             if (prevMonthBtn && nextMonthBtn) {
                 prevMonthBtn.addEventListener('click', () => { currentDate.setMonth(currentDate.getMonth() - 1); renderCalendar(); });
                 nextMonthBtn.addEventListener('click', () => { currentDate.setMonth(currentDate.getMonth() + 1); renderCalendar(); });
             }
-            listenToAllBookedSlots(); // Listen to all slots for calendar and admin panel
+            listenToAllBookedSlots();
         }
 
         const navbar = document.getElementById('navbar');
