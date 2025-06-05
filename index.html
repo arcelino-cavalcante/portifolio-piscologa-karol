@@ -15,10 +15,10 @@
             --color-cream: #FAF0E6;
             --color-light-pink: #FDECF0;
             --color-text: #333333;
-            --color-primary-accent: #E5A9B4;
-            /* Cor principal dos botões */
-            --color-primary-accent-darker: #D198A3;
-            /* Tom mais escuro para hover */
+            /* Alteração: Cor principal dos botões agora é #D198A3 */
+            --color-primary-accent: #D198A3;
+            /* Alteração: Cor de hover para #D198A3 é um tom mais escuro */
+            --color-primary-accent-darker: #C58A95;
             --color-secondary-accent: #D8C7B8;
             --color-star: #FFD700;
             --color-input-border: #D1D5DB;
@@ -54,15 +54,25 @@
         }
 
         .text-primary-accent {
+            /* Esta classe é para TEXTO, então pode continuar com a cor original se desejado, ou mudar para o novo accent se a intenção é unificar tudo */
             color: var(--color-primary-accent);
+            /* Se os textos que usam isso devem ter a cor #D198A3 */
+            /* Ou mantenha a cor original se --color-primary-accent era só para botões: color: #E5A9B4; */
         }
 
         .border-primary-accent {
             border-color: var(--color-primary-accent);
         }
 
+        /* Esta classe customizada é usada para aplicar a cor de fundo dos botões */
+        .bg-primary-accent {
+            background-color: var(--color-primary-accent) !important;
+            /* Garante que use a variável */
+        }
+
         .hover\:bg-primary-accent-dark:hover {
-            background-color: var(--color-primary-accent-darker);
+            background-color: var(--color-primary-accent-darker) !important;
+            /* Garante que use a variável para hover */
         }
 
         .text-star {
@@ -138,7 +148,8 @@
         .form-textarea:focus {
             outline: none;
             border-color: var(--color-primary-accent);
-            box-shadow: 0 0 0 2px rgba(229, 169, 180, 0.3);
+            box-shadow: 0 0 0 2px rgba(209, 152, 163, 0.3);
+            /* Ajustado o box-shadow para a nova cor primária */
         }
 
         .form-label {
@@ -178,6 +189,7 @@
 
         .calendar-header button {
             background-color: var(--color-primary-accent);
+            /* Botões do calendário usarão a nova cor */
             color: white;
             border: none;
             padding: 0.5rem 0.75rem;
@@ -189,12 +201,14 @@
 
         .calendar-header button:hover {
             background-color: var(--color-primary-accent-darker);
+            /* Hover dos botões do calendário */
         }
 
         #monthYearDisplay {
             font-size: 1.25rem;
             font-weight: 600;
             color: var(--color-primary-accent);
+            /* Pode manter ou mudar para --color-text se preferir */
             font-family: 'Playfair Display', serif;
             text-align: center;
             flex-grow: 1;
@@ -350,8 +364,14 @@
         }
 
         #confirmBookingBtn {
-            background-color: var(--color-primary-accent);
+            /* Já usa bg-primary-accent via classe Tailwind, mas pode ter estilo direto */
+            background-color: var(--color-primary-accent) !important;
         }
+
+        #confirmBookingBtn:hover {
+            background-color: var(--color-primary-accent-darker) !important;
+        }
+
 
         #confirmBookingBtn,
         #closeModalBtn {
@@ -390,6 +410,7 @@
 
         #adminBookingsTable th {
             background-color: var(--color-primary-accent);
+            /* Cabeçalho da tabela admin também usará a nova cor */
             color: white;
             font-weight: 600;
         }
@@ -403,6 +424,7 @@
         }
 
         .admin-cancel-btn {
+            /* Mantém cor de perigo */
             background-color: var(--color-danger);
             color: white;
             padding: 0.4rem 0.8rem;
@@ -422,7 +444,12 @@
         }
 
         #adminLoginBtn {
-            background-color: var(--color-primary-accent);
+            /* Botão de login admin também usará a nova cor */
+            background-color: var(--color-primary-accent) !important;
+        }
+
+        #adminLoginBtn:hover {
+            background-color: var(--color-primary-accent-darker) !important;
         }
 
 
@@ -542,11 +569,13 @@
 
         ::-webkit-scrollbar-thumb {
             background: var(--color-primary-accent);
+            /* Scrollbar também pode usar a nova cor */
             border-radius: 4px;
         }
 
         ::-webkit-scrollbar-thumb:hover {
-            background: #D198A3;
+            background: var(--color-primary-accent-darker);
+            /* E seu hover */
         }
     </style>
 </head>
@@ -596,6 +625,7 @@
             <p class="text-xl md:text-2xl text-gray-700 mb-8">Psicóloga Clínica | Atendimento Online Humanizado</p>
             <p class="text-lg text-gray-600 max-w-2xl mx-auto mb-10"> Acolhendo suas emoções e guiando você em sua
                 jornada de autoconhecimento e bem-estar. </p>
+            <!-- Botão Atualizado -->
             <a href="#contato"
                 class="bg-primary-accent text-white font-semibold py-3 px-8 rounded-lg shadow-md hover:bg-primary-accent-dark smooth-transition text-lg">
                 Agende sua Consulta </a>
@@ -705,6 +735,7 @@
                 </div>
                 <p class="mt-10 text-center"> Se tiver qualquer dúvida sobre o processo, entre em contato. Estou aqui
                     para ajudar! </p>
+                <!-- Botão Atualizado -->
                 <div class="text-center mt-8"> <a href="#contato"
                         class="bg-primary-accent text-white font-semibold py-3 px-8 rounded-lg shadow-md hover:bg-primary-accent-dark smooth-transition text-lg">
                         Quero Agendar </a> </div>
@@ -765,6 +796,7 @@
                     <div id="adminLoginForm" class="flex flex-col sm:flex-row items-center justify-center gap-2">
                         <input type="password" id="adminPasswordInput" class="form-input sm:w-auto flex-grow"
                             placeholder="Senha do Administrador">
+                        <!-- Botão Atualizado -->
                         <button id="adminLoginBtn"
                             class="w-full sm:w-auto bg-primary-accent text-white font-semibold py-2 px-6 rounded-lg shadow-md hover:bg-primary-accent-dark smooth-transition">Acessar</button>
                     </div>
@@ -779,6 +811,7 @@
                 <div class="overflow-x-auto shadow-md rounded-lg">
                     <table id="adminBookingsTable" class="min-w-full">
                         <thead class="bg-primary-accent text-white">
+                            <!-- Cabeçalho da tabela admin também usa a nova cor -->
                             <tr>
                                 <th class="py-3 px-4 text-left text-xs font-semibold uppercase tracking-wider">Cliente
                                 </th>
@@ -811,6 +844,7 @@
                     agendamento:</label>
                 <input type="text" id="clientNameInput" class="form-input mb-3 md:mb-4 text-sm md:text-base"
                     placeholder="Seu nome completo" required>
+                <!-- Botão Atualizado -->
                 <button id="confirmBookingBtn"
                     class="w-full bg-primary-accent text-white font-semibold py-2 md:py-3 rounded-lg shadow-md hover:bg-primary-accent-dark smooth-transition text-sm md:text-base">Confirmar
                     Agendamento</button>
@@ -876,6 +910,7 @@
                     <div> <label for="mensagem" class="form-label">Sua Mensagem:</label> <textarea id="mensagem"
                             name="mensagem" rows="4" class="form-textarea"
                             placeholder="Descreva brevemente sua necessidade ou dúvida..." required></textarea> </div>
+                    <!-- Botão Atualizado -->
                     <div class="text-center pt-4"> <button type="submit" id="sendToWhatsApp"
                             class="bg-primary-accent text-white font-semibold py-3 px-10 rounded-lg shadow-md hover:bg-primary-accent-dark smooth-transition text-lg inline-flex items-center">
                             <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24"
