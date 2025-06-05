@@ -1,0 +1,1321 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Karol Lemos - Psicóloga Online</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --color-white: #FFFFFF;
+            --color-cream: #FAF0E6;
+            --color-light-pink: #FDECF0;
+            --color-text: #333333;
+            --color-primary-accent: #E5A9B4;
+            /* Cor principal dos botões */
+            --color-primary-accent-darker: #D198A3;
+            /* Tom mais escuro para hover */
+            --color-secondary-accent: #D8C7B8;
+            --color-star: #FFD700;
+            --color-input-border: #D1D5DB;
+            --color-calendar-day-hover: #FCE7EA;
+            --color-calendar-booked-by-other: #F9C5D1;
+            --color-calendar-available-slot: #A8E6CF;
+            --color-danger: #e53e3e;
+            --color-danger-hover: #c53030;
+            --color-admin-bg: #f0f9ff;
+            /* Fundo suave para a área admin */
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--color-text);
+            background-color: var(--color-white);
+            scroll-behavior: smooth;
+        }
+
+        h1,
+        h2,
+        h3,
+        .font-playfair {
+            font-family: 'Playfair Display', serif;
+        }
+
+        .bg-cream {
+            background-color: var(--color-cream);
+        }
+
+        .bg-light-pink {
+            background-color: var(--color-light-pink);
+        }
+
+        .text-primary-accent {
+            color: var(--color-primary-accent);
+        }
+
+        .border-primary-accent {
+            border-color: var(--color-primary-accent);
+        }
+
+        .hover\:bg-primary-accent-dark:hover {
+            background-color: var(--color-primary-accent-darker);
+        }
+
+        .text-star {
+            color: var(--color-star);
+        }
+
+        .smooth-transition {
+            transition: all 0.3s ease-in-out;
+        }
+
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        #navbar {
+            transition: top 0.3s, background-color 0.3s, box-shadow 0.3s;
+        }
+
+        .navbar-scrolled {
+            background-color: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .menu-icon span {
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .menu-icon.open span:nth-child(1) {
+            transform: translateY(8px) rotate(45deg);
+        }
+
+        .menu-icon.open span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .menu-icon.open span:nth-child(3) {
+            transform: translateY(-8px) rotate(-45deg);
+        }
+
+        .custom-card {
+            background-color: var(--color-white);
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .custom-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        .form-input,
+        .form-select,
+        .form-textarea {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--color-input-border);
+            border-radius: 8px;
+            background-color: var(--color-white);
+            color: var(--color-text);
+            transition: border-color 0.3s ease;
+        }
+
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--color-primary-accent);
+            box-shadow: 0 0 0 2px rgba(229, 169, 180, 0.3);
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--color-text);
+        }
+
+        .how-it-works-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .how-it-works-icon {
+            color: var(--color-primary-accent);
+            font-size: 1.5rem;
+            margin-right: 0.75rem;
+            flex-shrink: 0;
+        }
+
+        /* Calendar Styles */
+        .calendar-container {
+            background-color: var(--color-white);
+            padding: 1rem;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .calendar-header button {
+            background-color: var(--color-primary-accent);
+            color: white;
+            border: none;
+            padding: 0.5rem 0.75rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-size: 0.875rem;
+        }
+
+        .calendar-header button:hover {
+            background-color: var(--color-primary-accent-darker);
+        }
+
+        #monthYearDisplay {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--color-primary-accent);
+            font-family: 'Playfair Display', serif;
+            text-align: center;
+            flex-grow: 1;
+            margin: 0 0.5rem;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 0.25rem;
+        }
+
+        .calendar-weekday {
+            text-align: center;
+            font-weight: 600;
+            color: var(--color-secondary-accent);
+            padding-bottom: 0.5rem;
+            font-size: 0.75rem;
+        }
+
+        .calendar-day {
+            text-align: center;
+            padding: 0.3rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.2s, border-color 0.2s;
+            min-height: 60px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            border: 1px solid transparent;
+            position: relative;
+        }
+
+        .calendar-day.not-current-month {
+            color: #ccc;
+            background-color: #f9f9f9;
+            cursor: default;
+        }
+
+        .calendar-day.past-day {
+            color: #aaa;
+            background-color: #f0f0f0;
+            cursor: not-allowed;
+        }
+
+        .calendar-day.current-month:not(.past-day):not(.today-mark):hover {
+            background-color: var(--color-calendar-day-hover);
+            border-color: var(--color-primary-accent);
+        }
+
+        .calendar-day .day-number {
+            font-size: 1rem;
+            margin-bottom: 0.1rem;
+            display: block;
+        }
+
+        .day-booking-indicator {
+            font-size: 0.6rem;
+            color: var(--color-text);
+            padding: 0.1rem 0.2rem;
+            border-radius: 3px;
+            line-height: 1.2;
+        }
+
+        .day-booking-indicator.some-booked {
+            background-color: var(--color-calendar-booked-by-other);
+            color: white;
+        }
+
+        .day-booking-indicator.all-available {
+            background-color: var(--color-calendar-available-slot);
+            color: var(--color-text);
+        }
+
+        .calendar-day.today-mark .day-number {
+            color: var(--color-primary-accent);
+            font-weight: bold;
+        }
+
+        /* Time Slot Modal */
+        .modal-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            padding: 1rem;
+        }
+
+        .modal-backdrop.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 450px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        #modalDateDisplay {
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+        }
+
+        #timeSlotsContainer .time-slot {
+            display: block;
+            width: 100%;
+            padding: 0.6rem;
+            margin-bottom: 0.5rem;
+            border: 1px solid var(--color-input-border);
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            font-size: 0.9rem;
+        }
+
+        #timeSlotsContainer .time-slot:hover:not(.booked):not(.unavailable) {
+            background-color: var(--color-calendar-day-hover);
+        }
+
+        #timeSlotsContainer .time-slot.booked {
+            background-color: var(--color-calendar-booked-by-other);
+            color: white;
+            cursor: not-allowed;
+        }
+
+        #timeSlotsContainer .time-slot.unavailable {
+            background-color: #eee;
+            color: #999;
+            cursor: not-allowed;
+        }
+
+        /* Removed my-booking as client won't see their own highlighted slots */
+        #bookingConfirmation .form-input {
+            margin-bottom: 1rem;
+        }
+
+        #confirmBookingBtn {
+            background-color: var(--color-primary-accent);
+        }
+
+        /* Ensuring main action buttons use primary accent */
+        #confirmBookingBtn,
+        #closeModalBtn {
+            padding: 0.6rem;
+            font-size: 0.9rem;
+        }
+
+        .cancel-notice {
+            font-size: 0.8rem;
+            color: var(--color-text);
+            margin-top: 1rem;
+            text-align: center;
+        }
+
+
+        /* Admin Panel Styles */
+        #adminLoginSection {
+            background-color: var(--color-admin-bg);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-top: 2rem;
+        }
+
+        #adminBookingsTable {
+            width: 100%;
+            margin-top: 1rem;
+            border-collapse: collapse;
+        }
+
+        #adminBookingsTable th,
+        #adminBookingsTable td {
+            border: 1px solid var(--color-secondary-accent);
+            padding: 0.75rem;
+            text-align: left;
+            font-size: 0.875rem;
+        }
+
+        #adminBookingsTable th {
+            background-color: var(--color-primary-accent);
+            color: white;
+            font-weight: 600;
+        }
+
+        #adminBookingsTable tr:nth-child(even) {
+            background-color: var(--color-white);
+        }
+
+        #adminBookingsTable tr:nth-child(odd) {
+            background-color: var(--color-light-pink);
+        }
+
+        .admin-cancel-btn {
+            background-color: var(--color-danger);
+            color: white;
+            padding: 0.4rem 0.8rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-size: 0.8rem;
+        }
+
+        .admin-cancel-btn:hover {
+            background-color: var(--color-danger-hover);
+        }
+
+        #adminPasswordInput {
+            margin-right: 0.5rem;
+        }
+
+        #adminLoginBtn {
+            background-color: var(--color-primary-accent);
+        }
+
+
+        @media (max-width: 640px) {
+
+            /* Tailwind's sm breakpoint */
+            #adminBookingsTable th,
+            #adminBookingsTable td {
+                padding: 0.5rem;
+                font-size: 0.75rem;
+            }
+
+            #adminBookingsTable {
+                display: block;
+                overflow-x: auto;
+                white-space: nowrap;
+            }
+
+            /* For table horizontal scroll on small screens */
+        }
+
+        @media (max-width: 480px) {
+            .calendar-header button {
+                padding: 0.4rem 0.6rem;
+                font-size: 0.75rem;
+            }
+
+            #monthYearDisplay {
+                font-size: 1rem;
+                margin: 0 0.25rem;
+            }
+
+            .calendar-day {
+                min-height: 50px;
+                padding: 0.2rem;
+                font-size: 0.7rem;
+            }
+
+            .calendar-day .day-number {
+                font-size: 0.85rem;
+            }
+
+            .day-booking-indicator {
+                font-size: 0.55rem;
+                line-height: 1.1;
+                padding: 0.1rem;
+            }
+
+            .modal-content {
+                padding: 1rem;
+            }
+
+            #modalDateDisplay {
+                font-size: 1.1rem;
+            }
+
+            #timeSlotsContainer .time-slot {
+                padding: 0.5rem;
+                font-size: 0.85rem;
+            }
+
+            #confirmBookingBtn,
+            #closeModalBtn {
+                padding: 0.5rem;
+                font-size: 0.85rem;
+            }
+
+            .legend-item {
+                font-size: 0.7rem;
+            }
+
+            .legend-item span {
+                margin-right: 0.25rem;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .calendar-header {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 0.5rem;
+            }
+
+            #monthYearDisplay {
+                order: -1;
+                width: 100%;
+                margin-bottom: 0.5rem;
+            }
+
+            .calendar-day {
+                min-height: 45px;
+            }
+
+            .day-booking-indicator {
+                display: none;
+            }
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.25rem;
+        }
+
+        .legend-item span {
+            display: inline-block;
+            width: 0.75rem;
+            height: 0.75rem;
+            border-radius: 50%;
+            margin-right: 0.5rem;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--color-cream);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--color-primary-accent);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #D198A3;
+        }
+    </style>
+</head>
+
+<body class="antialiased">
+
+    <!-- Navbar -->
+    <nav id="navbar" class="fixed top-0 left-0 right-0 z-50 p-4 md:px-8">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="#hero" class="text-2xl font-playfair font-bold text-primary-accent">Karol Lemos</a>
+            <div class="hidden md:flex space-x-6">
+                <a href="#hero" class="text-gray-700 hover:text-primary-accent smooth-transition">Início</a>
+                <a href="#sobre" class="text-gray-700 hover:text-primary-accent smooth-transition">Sobre Mim</a>
+                <a href="#servicos" class="text-gray-700 hover:text-primary-accent smooth-transition">Serviços</a>
+                <a href="#como-funciona" class="text-gray-700 hover:text-primary-accent smooth-transition">Como
+                    Funciona</a>
+                <a href="#agenda-online" class="text-gray-700 hover:text-primary-accent smooth-transition">Agenda
+                    Online</a>
+                <a href="#depoimentos" class="text-gray-700 hover:text-primary-accent smooth-transition">Depoimentos</a>
+                <a href="#contato" class="text-gray-700 hover:text-primary-accent smooth-transition">Contato</a>
+            </div>
+            <div class="md:hidden"> <button id="mobile-menu-button" class="text-gray-700 focus:outline-none menu-icon">
+                    <span class="block w-6 h-0.5 bg-gray-700 mb-1.5"></span> <span
+                        class="block w-6 h-0.5 bg-gray-700 mb-1.5"></span> <span
+                        class="block w-6 h-0.5 bg-gray-700"></span> </button> </div>
+        </div>
+        <div id="mobile-menu" class="hidden md:hidden bg-white shadow-lg rounded-b-lg mt-2">
+            <a href="#hero" class="block px-4 py-3 text-gray-700 hover:bg-light-pink smooth-transition">Início</a>
+            <a href="#sobre" class="block px-4 py-3 text-gray-700 hover:bg-light-pink smooth-transition">Sobre Mim</a>
+            <a href="#servicos" class="block px-4 py-3 text-gray-700 hover:bg-light-pink smooth-transition">Serviços</a>
+            <a href="#como-funciona" class="block px-4 py-3 text-gray-700 hover:bg-light-pink smooth-transition">Como
+                Funciona</a>
+            <a href="#agenda-online" class="block px-4 py-3 text-gray-700 hover:bg-light-pink smooth-transition">Agenda
+                Online</a>
+            <a href="#depoimentos"
+                class="block px-4 py-3 text-gray-700 hover:bg-light-pink smooth-transition">Depoimentos</a>
+            <a href="#contato" class="block px-4 py-3 text-gray-700 hover:bg-light-pink smooth-transition">Contato</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="hero" class="min-h-screen flex items-center justify-center bg-cream fade-in pt-20 md:pt-0">
+        <div class="container mx-auto text-center px-6 py-12 md:py-24">
+            <img src="https://placehold.co/150x150/FDECF0/E5A9B4?text=KL" alt="Karol Lemos - Psicóloga"
+                class="w-32 h-32 md:w-40 md:h-40 rounded-full mx-auto mb-6 shadow-lg border-4 border-white">
+            <h1 class="text-4xl md:text-6xl font-playfair font-bold text-primary-accent mb-4">Karol Lemos</h1>
+            <p class="text-xl md:text-2xl text-gray-700 mb-8">Psicóloga Clínica | Atendimento Online Humanizado</p>
+            <p class="text-lg text-gray-600 max-w-2xl mx-auto mb-10"> Acolhendo suas emoções e guiando você em sua
+                jornada de autoconhecimento e bem-estar. </p>
+            <a href="#contato"
+                class="bg-primary-accent text-white font-semibold py-3 px-8 rounded-lg shadow-md hover:bg-primary-accent-dark smooth-transition text-lg">
+                Agende sua Consulta </a>
+        </div>
+    </section>
+
+    <!-- Sobre Mim Section -->
+    <section id="sobre" class="py-16 md:py-24 bg-white fade-in">
+        <div class="container mx-auto px-6">
+            <h2 class="text-3xl md:text-4xl font-playfair font-bold text-center text-gray-800 mb-12">Sobre Mim</h2>
+            <div class="flex flex-col md:flex-row items-center md:space-x-12">
+                <div class="md:w-1/3 mb-8 md:mb-0"> <img src="https://placehold.co/400x500/FDECF0/333?text=Karol+Lemos"
+                        alt="Foto de Karol Lemos" class="rounded-lg shadow-xl w-full"> </div>
+                <div class="md:w-2/3 text-gray-700 text-lg leading-relaxed">
+                    <p class="mb-4"> Olá! Sou Karol Lemos, psicóloga clínica apaixonada por auxiliar pessoas a
+                        encontrarem equilíbrio emocional e qualidade de vida. Minha abordagem terapêutica é pautada na
+                        escuta ativa, empatia e na construção de um vínculo de confiança, essencial para o processo de
+                        transformação. </p>
+                    <p class="mb-4"> Acredito que cada indivíduo é único e possui as ferramentas internas para superar
+                        desafios. Meu papel é facilitar essa descoberta, oferecendo um espaço seguro e acolhedor para
+                        que você possa explorar suas emoções, pensamentos e comportamentos. </p>
+                    <p class="mb-4"> Com foco em atendimentos online, busco levar a psicoterapia de forma acessível e
+                        conveniente, permitindo que você cuide da sua saúde mental onde quer que esteja. Minhas
+                        especializações incluem [Karol, mencione aqui suas áreas como ansiedade, depressão, autoestima,
+                        relacionamentos, TCC, psicanálise, etc.]. </p>
+                    <p> Estou aqui para caminhar ao seu lado nesta jornada de autoconhecimento e crescimento pessoal.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Serviços Section -->
+    <section id="servicos" class="py-16 md:py-24 bg-light-pink fade-in">
+        <div class="container mx-auto px-6">
+            <h2 class="text-3xl md:text-4xl font-playfair font-bold text-center text-gray-800 mb-16">Serviços Oferecidos
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="custom-card p-6 text-center">
+                    <div class="text-5xl text-primary-accent mb-4">🛋️</div>
+                    <h3 class="text-2xl font-playfair font-semibold text-gray-800 mb-3">Terapia Online Individual</h3>
+                    <p class="text-gray-600 leading-relaxed"> Sessões individuais e personalizadas, realizadas por
+                        videochamada, com foco em suas necessidades e objetivos terapêuticos. Um espaço seguro para
+                        explorar suas questões. </p>
+                </div>
+                <div class="custom-card p-6 text-center">
+                    <div class="text-5xl text-primary-accent mb-4">💬</div>
+                    <h3 class="text-2xl font-playfair font-semibold text-gray-800 mb-3">Aconselhamento Psicológico</h3>
+                    <p class="text-gray-600 leading-relaxed"> Orientação para lidar com questões pontuais, tomada de
+                        decisões importantes ou momentos de crise, buscando clareza e estratégias eficazes. </p>
+                </div>
+                <div class="custom-card p-6 text-center">
+                    <div class="text-5xl text-primary-accent mb-4">🌱</div>
+                    <h3 class="text-2xl font-playfair font-semibold text-gray-800 mb-3">Autoconhecimento e
+                        Desenvolvimento</h3>
+                    <p class="text-gray-600 leading-relaxed"> Processo terapêutico voltado para o aprofundamento do
+                        autoconhecimento, desenvolvimento de habilidades emocionais e fortalecimento da autoestima. </p>
+                </div>
+            </div>
+            <div class="text-center mt-12">
+                <p class="text-lg text-gray-700">Todos os atendimentos são realizados online, via plataformas seguras,
+                    garantindo sua privacidade e conforto.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Como Funciona Section -->
+    <section id="como-funciona" class="py-16 md:py-24 bg-white fade-in">
+        <div class="container mx-auto px-6">
+            <h2 class="text-3xl md:text-4xl font-playfair font-bold text-center text-gray-800 mb-12">Como Funcionam os
+                Atendimentos Online</h2>
+            <div class="max-w-3xl mx-auto text-gray-700 text-lg leading-relaxed">
+                <p class="mb-8 text-center"> Priorizo um ambiente terapêutico acolhedor, seguro e totalmente
+                    confidencial, mesmo à distância. Veja como é simples iniciar sua jornada de cuidado: </p>
+                <div class="space-y-6">
+                    <div class="how-it-works-item"> <span class="how-it-works-icon">🕒</span>
+                        <div>
+                            <h4 class="font-semibold text-xl text-primary-accent mb-1">Sessões de 1 Hora</h4>
+                            <p>Cada sessão de psicoterapia tem duração de 60 minutos, um tempo dedicado inteiramente à
+                                sua escuta e ao trabalho terapêutico.</p>
+                        </div>
+                    </div>
+                    <div class="how-it-works-item"> <span class="how-it-works-icon">💻</span>
+                        <div>
+                            <h4 class="font-semibold text-xl text-primary-accent mb-1">Plataforma Segura: Google Meet
+                            </h4>
+                            <p>Os atendimentos são realizados por videochamada através do Google Meet, uma plataforma
+                                estável e segura que garante a privacidade da nossa conversa. Você receberá o link para
+                                a sala virtual antes de cada sessão.</p>
+                        </div>
+                    </div>
+                    <div class="how-it-works-item"> <span class="how-it-works-icon">🏠</span>
+                        <div>
+                            <h4 class="font-semibold text-xl text-primary-accent mb-1">Conforto e Acessibilidade</h4>
+                            <p>Realize suas sessões no conforto do seu lar ou de qualquer lugar que lhe ofereça
+                                privacidade e tranquilidade. Tudo que você precisa é de uma boa conexão com a internet e
+                                um dispositivo com câmera e microfone.</p>
+                        </div>
+                    </div>
+                    <div class="how-it-works-item"> <span class="how-it-works-icon">🗓️</span>
+                        <div>
+                            <h4 class="font-semibold text-xl text-primary-accent mb-1">Agendamento Flexível</h4>
+                            <p>Buscaremos juntos o melhor horário para suas sessões, conciliando com sua rotina. A
+                                frequência é definida de acordo com suas necessidades, geralmente semanal.</p>
+                        </div>
+                    </div>
+                </div>
+                <p class="mt-10 text-center"> Se tiver qualquer dúvida sobre o processo, entre em contato. Estou aqui
+                    para ajudar! </p>
+                <div class="text-center mt-8"> <a href="#contato"
+                        class="bg-primary-accent text-white font-semibold py-3 px-8 rounded-lg shadow-md hover:bg-primary-accent-dark smooth-transition text-lg">
+                        Quero Agendar </a> </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Agenda Online Section -->
+    <section id="agenda-online" class="py-16 md:py-24 bg-light-pink fade-in">
+        <div class="container mx-auto px-6">
+            <h2 class="text-3xl md:text-4xl font-playfair font-bold text-center text-gray-800 mb-6 md:mb-12">Agenda
+                Online Interativa</h2>
+            <p class="text-lg text-gray-700 text-center mb-6 max-w-2xl mx-auto">
+                Consulte a disponibilidade e agende seu horário diretamente pelo calendário.
+                <br><strong class="text-sm">Para reagendamentos ou cancelamentos, por favor, entre em contato
+                    diretamente através do <a href="#contato"
+                        class="text-primary-accent underline hover:text-primary-accent-darker">formulário de
+                        contato</a>.</strong>
+            </p>
+            <div class="text-center mb-8" id="authStatusLoading">
+                <p class="text-gray-600">Carregando informações da agenda...</p>
+            </div>
+            <div class="text-center mb-8 hidden" id="authStatusNotAuthenticated">
+                <p class="text-red-600">Você precisa estar conectado para interagir com a agenda.</p>
+            </div>
+
+            <div id="calendarApp" class="max-w-2xl mx-auto calendar-container hidden">
+                <div class="calendar-header">
+                    <button id="prevMonthBtn" aria-label="Mês anterior">&lt; Anterior</button>
+                    <div id="monthYearDisplay" aria-live="polite"></div>
+                    <button id="nextMonthBtn" aria-label="Próximo mês">Próximo &gt;</button>
+                </div>
+                <div class="calendar-grid">
+                    <div class="calendar-weekday">Dom</div>
+                    <div class="calendar-weekday">Seg</div>
+                    <div class="calendar-weekday">Ter</div>
+                    <div class="calendar-weekday">Qua</div>
+                    <div class="calendar-weekday">Qui</div>
+                    <div class="calendar-weekday">Sex</div>
+                    <div class="calendar-weekday">Sáb</div>
+                </div>
+                <div id="calendarDays" class="calendar-grid mt-2"></div>
+                <div class="text-left mt-4 text-xs sm:text-sm text-gray-600 space-y-1">
+                    <p class="legend-item"><span style="background-color: var(--color-calendar-available-slot);"></span>
+                        Horários disponíveis</p>
+                    <p class="legend-item"><span
+                            style="background-color: var(--color-calendar-booked-by-other);"></span> Parcialmente
+                        ocupado</p>
+                    <p class="legend-item"><span class="border border-gray-400"></span> Sem horários/Lotado</p>
+                </div>
+            </div>
+
+            <!-- Admin Login and Panel -->
+            <div id="adminLoginSection" class="max-w-2xl mx-auto mt-10">
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-playfair font-semibold text-center text-gray-800 mb-4">Acesso Administrativo
+                    </h3>
+                    <div id="adminLoginForm" class="flex flex-col sm:flex-row items-center justify-center gap-2">
+                        <input type="password" id="adminPasswordInput" class="form-input sm:w-auto flex-grow"
+                            placeholder="Senha do Administrador">
+                        <button id="adminLoginBtn"
+                            class="w-full sm:w-auto bg-primary-accent text-white font-semibold py-2 px-6 rounded-lg shadow-md hover:bg-primary-accent-dark smooth-transition">Acessar</button>
+                    </div>
+                    <p id="adminLoginError" class="text-red-500 text-sm text-center mt-2 hidden">Senha incorreta.</p>
+                </div>
+            </div>
+
+            <div id="adminBookingsPanel" class="max-w-4xl mx-auto mt-8 hidden">
+                <h3 class="text-2xl font-playfair font-semibold text-center text-gray-800 mb-6">Painel de Agendamentos
+                </h3>
+                <div id="adminBookingsLoading" class="text-center text-gray-600">Carregando agendamentos...</div>
+                <div class="overflow-x-auto shadow-md rounded-lg">
+                    <table id="adminBookingsTable" class="min-w-full">
+                        <thead class="bg-primary-accent text-white">
+                            <tr>
+                                <th class="py-3 px-4 text-left text-xs font-semibold uppercase tracking-wider">Cliente
+                                </th>
+                                <th class="py-3 px-4 text-left text-xs font-semibold uppercase tracking-wider">Data</th>
+                                <th class="py-3 px-4 text-left text-xs font-semibold uppercase tracking-wider">Hora</th>
+                                <th class="py-3 px-4 text-left text-xs font-semibold uppercase tracking-wider">Ação</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminBookingsTbody" class="bg-white">
+                            <!-- Linhas da tabela serão inseridas aqui -->
+                        </tbody>
+                    </table>
+                </div>
+                <p id="noAdminBookings" class="text-center text-gray-500 mt-4 hidden">Nenhum agendamento encontrado.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modal para exibir horários e confirmar agendamento -->
+    <div id="timeSlotModal" class="modal-backdrop">
+        <div class="modal-content">
+            <h3 id="modalDateDisplay"
+                class="text-xl md:text-2xl font-playfair font-semibold text-center text-primary-accent mb-4 md:mb-6">
+            </h3>
+            <div id="timeSlotsContainer" class="space-y-2 mb-4 md:mb-6"></div>
+            <div id="bookingConfirmation" class="hidden">
+                <p class="text-md md:text-lg text-center mb-3 md:mb-4">Você selecionou <strong
+                        id="selectedSlotDisplay"></strong>.</p>
+                <label for="clientNameInput" class="form-label text-sm md:text-base">Seu nome para o
+                    agendamento:</label>
+                <input type="text" id="clientNameInput" class="form-input mb-3 md:mb-4 text-sm md:text-base"
+                    placeholder="Seu nome completo" required>
+                <button id="confirmBookingBtn"
+                    class="w-full bg-primary-accent text-white font-semibold py-2 md:py-3 rounded-lg shadow-md hover:bg-primary-accent-dark smooth-transition text-sm md:text-base">Confirmar
+                    Agendamento</button>
+                <p class="cancel-notice mt-3">Para reagendar ou cancelar, por favor, entre em contato diretamente com a
+                    psicóloga.</p>
+            </div>
+            <button id="closeModalBtn"
+                class="mt-4 md:mt-6 w-full bg-gray-300 text-gray-700 font-semibold py-2 rounded-lg hover:bg-gray-400 smooth-transition text-sm md:text-base">Fechar</button>
+        </div>
+    </div>
+
+    <!-- Depoimentos Section -->
+    <section id="depoimentos" class="py-16 md:py-24 bg-cream fade-in">
+        <div class="container mx-auto px-6">
+            <h2 class="text-3xl md:text-4xl font-playfair font-bold text-center text-gray-800 mb-16">O que meus
+                pacientes dizem</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="custom-card p-6 text-center flex flex-col items-center">
+                    <div class="text-2xl text-star mb-3"><span>★★★★★</span></div>
+                    <p class="text-gray-600 italic mb-4 text-md leading-relaxed"> "A Karol foi fundamental no meu
+                        processo de autoconhecimento. As sessões online foram muito práticas e eficazes. Me senti
+                        verdadeiramente acolhida." </p>
+                    <p class="font-semibold text-primary-accent mt-auto">- Paciente Anônimo</p>
+                </div>
+                <div class="custom-card p-6 text-center flex flex-col items-center">
+                    <div class="text-2xl text-star mb-3"><span>★★★★★</span></div>
+                    <p class="text-gray-600 italic mb-4 text-md leading-relaxed"> "Profissional incrível! Muito
+                        atenciosa e competente. Consegui ver resultados significativos em poucas semanas de terapia.
+                        Recomendo de olhos fechados." </p>
+                    <p class="font-semibold text-primary-accent mt-auto">- M.S. (Iniciais)</p>
+                </div>
+                <div class="custom-card p-6 text-center flex flex-col items-center">
+                    <div class="text-2xl text-star mb-3"><span>★★★★★</span></div>
+                    <p class="text-gray-600 italic mb-4 text-md leading-relaxed"> "Encontrei na Karol um espaço seguro
+                        para falar sobre minhas angústias. Sua escuta sensível e intervenções precisas fizeram toda a
+                        diferença." </p>
+                    <p class="font-semibold text-primary-accent mt-auto">- Paciente Anônimo</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contato Section -->
+    <section id="contato" class="py-16 md:py-24 bg-white fade-in">
+        <div class="container mx-auto px-6">
+            <h2 class="text-3xl md:text-4xl font-playfair font-bold text-center text-gray-800 mb-12">Entre em Contato
+            </h2>
+            <div class="max-w-2xl mx-auto bg-light-pink p-8 md:p-10 lg:p-12 rounded-xl shadow-xl">
+                <p class="text-lg text-gray-700 text-center mb-8"> Pronta para iniciar sua jornada de cuidado e
+                    transformação? <br> Preencha o formulário abaixo para facilitar nosso primeiro contato ou para
+                    reagendar/cancelar uma consulta. </p>
+                <form id="contactForm" class="space-y-6">
+                    <div> <label for="nome" class="form-label">Seu Nome:</label> <input type="text" id="nome"
+                            name="nome" class="form-input" placeholder="Digite seu nome completo" required> </div>
+                    <div> <label for="assunto" class="form-label">Assunto:</label> <select id="assunto" name="assunto"
+                            class="form-select" required>
+                            <option value="" disabled selected>Selecione o motivo do contato...</option>
+                            <option value="Agendamento de Consulta">Agendamento de Consulta (via formulário)</option>
+                            <option value="Reagendamento ou Cancelamento">Reagendamento ou Cancelamento</option>
+                            <option value="Dúvidas Gerais">Dúvidas Gerais</option>
+                            <option value="Informações sobre Serviços">Informações sobre Serviços</option>
+                        </select> </div>
+                    <div> <label for="mensagem" class="form-label">Sua Mensagem:</label> <textarea id="mensagem"
+                            name="mensagem" rows="4" class="form-textarea"
+                            placeholder="Descreva brevemente sua necessidade ou dúvida..." required></textarea> </div>
+                    <div class="text-center pt-4"> <button type="submit" id="sendToWhatsApp"
+                            class="bg-primary-accent text-white font-semibold py-3 px-10 rounded-lg shadow-md hover:bg-primary-accent-dark smooth-transition text-lg inline-flex items-center">
+                            <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M12.001 2.004C6.478 2.004 2 6.482 2 12.005C2 14.09 2.588 16.034 3.603 17.688L2.046 22.01l4.495-1.55C7.99 21.48 9.925 22.006 12.001 22.006C17.524 22.006 22 17.528 22 12.005C22 6.482 17.524 2.004 12.001 2.004ZM9.04 8.003C9.04 7.728 9.232 7.536 9.507 7.536H10.23C10.421 7.536 10.599 7.625 10.72 7.783C10.84 7.941 11.008 8.276 11.008 8.365C11.008 8.454 10.981 8.543 10.954 8.632C10.901 8.81 10.682 9.056 10.573 9.172C10.464 9.288 10.328 9.347 10.16 9.436C10.019 9.525 9.851 9.552 9.71 9.552C9.542 9.552 9.296 9.463 9.04 9.172C8.784 8.881 8.249 8.276 8.194 8.187C8.139 8.098 8.003 7.88 8.003 7.688C8.003 7.496 8.195 7.304 8.326 7.304H8.494C8.603 7.304 8.739 7.393 8.828 7.536L9.04 8.003ZM15.797 15.21C15.688 15.402 15.521 15.461 15.275 15.516C15.029 15.571 14.539 15.78 14.134 15.948C13.729 16.116 13.324 16.171 13.033 16.082C12.742 15.993 12.224 15.78 11.651 15.234C10.86 14.471 10.283 13.574 10.147 13.328C10.011 13.082 9.876 12.904 10.011 12.746C10.147 12.588 10.315 12.429 10.451 12.271C10.56 12.14 10.615 12.024 10.724 11.866C10.833 11.708 10.778 11.577 10.699 11.43C10.62 11.283 10.064 10.001 9.818 9.436C9.572 8.871 9.326 8.93 9.191 8.93C9.078 8.93 8.938 8.93 8.828 8.93H8.632C8.357 8.93 8.082 9.019 7.863 9.294C7.644 9.569 7.033 10.134 7.033 11.059C7.033 11.984 7.89 12.851 8.003 12.996C8.116 13.141 9.04 14.378 10.315 14.943C11.59 15.508 12.128 15.726 12.533 15.862C13.183 16.082 13.486 16.054 13.751 15.993C14.016 15.932 14.794 15.488 14.986 15.21C15.178 14.932 15.178 14.713 15.123 14.624C15.068 14.535 14.959 14.476 14.79 14.37L15.797 15.21Z">
+                                </path>
+                            </svg> Enviar para WhatsApp </button> </div>
+                </form>
+                <p class="text-xs text-gray-500 text-center mt-6"> Ao clicar no botão, você será redirecionada(o) para o
+                    WhatsApp com uma mensagem pré-preenchida. </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-cream py-8 text-center">
+        <div class="container mx-auto px-6">
+            <p class="text-gray-600"> &copy; <span id="currentYear"></span> Karol Lemos Psicóloga. Todos os direitos
+                reservados. </p>
+            <p class="text-sm text-gray-500 mt-1"> CRP: XX/XXXXX (Karol, por favor, preencha com seu número do CRP) </p>
+        </div>
+    </footer>
+
+    <!-- Firebase SDK -->
+    <script type="module">
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {
+            apiKey: "AIzaSyBhxWyBNC-PDiNAH7r8xfnABmiXpljasrU", authDomain: "agendamento-protifolios.firebaseapp.com", projectId: "agendamento-protifolios",
+            storageBucket: "agendamento-protifolios.firebasestorage.app", messagingSenderId: "75306290127", appId: "Y1:75306290127:web:adeefab360371490cee0ba"
+        };
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, doc, getDoc, getDocs, setDoc, deleteDoc, onSnapshot, query, where, Timestamp, serverTimestamp, orderBy, setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        setLogLevel('debug');
+
+        let currentUserId = null;
+        let allBookedSlots = new Map();
+
+        // KAROL: MUDE ESTA SENHA PARA ALGO SEGURO!
+        const ADMIN_PASSWORD = "karol26@#";
+        let isAdminLoggedIn = false;
+
+
+        const karolAvailability = {
+            weekdays: [1, 2, 3, 4, 5],
+            slots: ['09:00', '10:00', '11:00', '13:00', '14:00', '15:00', '16:00', '17:00']
+        };
+        const agendaSlotsCollectionName = "karol_lemos_agenda_slots";
+        const firestoreAgendaSlotsCollectionPath = `artifacts/${appId}/public/data/${agendaSlotsCollectionName}`;
+
+        const calendarAppDiv = document.getElementById('calendarApp');
+        const authStatusLoadingDiv = document.getElementById('authStatusLoading');
+        const authStatusNotAuthenticatedDiv = document.getElementById('authStatusNotAuthenticated');
+        const monthYearDisplay = document.getElementById('monthYearDisplay');
+        const calendarDaysContainer = document.getElementById('calendarDays');
+        const prevMonthBtn = document.getElementById('prevMonthBtn');
+        const nextMonthBtn = document.getElementById('nextMonthBtn');
+        const timeSlotModal = document.getElementById('timeSlotModal');
+        const modalDateDisplay = document.getElementById('modalDateDisplay');
+        const timeSlotsContainer = document.getElementById('timeSlotsContainer');
+        const bookingConfirmationDiv = document.getElementById('bookingConfirmation');
+        const selectedSlotDisplay = document.getElementById('selectedSlotDisplay');
+        const clientNameInput = document.getElementById('clientNameInput');
+        const confirmBookingBtn = document.getElementById('confirmBookingBtn');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+
+        const adminLoginSection = document.getElementById('adminLoginSection');
+        const adminPasswordInput = document.getElementById('adminPasswordInput');
+        const adminLoginBtn = document.getElementById('adminLoginBtn');
+        const adminLoginError = document.getElementById('adminLoginError');
+        const adminBookingsPanel = document.getElementById('adminBookingsPanel');
+        const adminBookingsTbody = document.getElementById('adminBookingsTbody');
+        const adminBookingsLoading = document.getElementById('adminBookingsLoading');
+        const noAdminBookings = document.getElementById('noAdminBookings');
+
+
+        let currentDate = new Date();
+        let selectedDateForBooking = null;
+        let selectedTimeForBooking = null;
+        let allBookingsListenerUnsubscribe = null;
+
+
+        onAuthStateChanged(auth, async (user) => {
+            authStatusLoadingDiv.classList.add('hidden');
+            if (user) {
+                currentUserId = user.uid;
+                if (calendarAppDiv) calendarAppDiv.classList.remove('hidden');
+                if (adminLoginSection) adminLoginSection.classList.remove('hidden'); // Show admin login
+                if (authStatusNotAuthenticatedDiv) authStatusNotAuthenticatedDiv.classList.add('hidden');
+                initializeCalendarApp();
+            } else {
+                currentUserId = null;
+                isAdminLoggedIn = false; // Reset admin status on sign out
+                if (calendarAppDiv) calendarAppDiv.classList.add('hidden');
+                if (adminLoginSection) adminLoginSection.classList.add('hidden');
+                if (adminBookingsPanel) adminBookingsPanel.classList.add('hidden');
+
+
+                if (allBookingsListenerUnsubscribe) allBookingsListenerUnsubscribe();
+
+                try {
+                    if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                        await signInWithCustomToken(auth, __initial_auth_token);
+                    } else {
+                        await signInAnonymously(auth);
+                    }
+                } catch (error) {
+                    console.error("Error during sign-in:", error);
+                    if (authStatusNotAuthenticatedDiv) {
+                        authStatusNotAuthenticatedDiv.classList.remove('hidden');
+                        authStatusNotAuthenticatedDiv.textContent = "Erro ao conectar com a agenda. Tente novamente mais tarde.";
+                    }
+                }
+            }
+        });
+
+        function formatDateToYYYYMMDD(date) {
+            const y = date.getFullYear();
+            const m = String(date.getMonth() + 1).padStart(2, '0');
+            const d = String(date.getDate()).padStart(2, '0');
+            return `${y}-${m}-${d}`;
+        }
+        function formatSlotId(date, time) {
+            return `${date}_${time.replace(':', '')}`;
+        }
+
+        async function listenToAllBookedSlots() {
+            if (!currentUserId) return; // Ensure user is authenticated before listening
+
+            const slotsColRef = collection(db, firestoreAgendaSlotsCollectionPath);
+
+            if (allBookingsListenerUnsubscribe) { // Detach previous listener if any
+                allBookingsListenerUnsubscribe();
+            }
+
+            allBookingsListenerUnsubscribe = onSnapshot(query(slotsColRef), (snapshot) => { // Removed orderBy for simplicity, sort client-side for admin table
+                allBookedSlots.clear();
+                snapshot.forEach((docSnap) => {
+                    allBookedSlots.set(docSnap.id, docSnap.data());
+                });
+                console.log("All booked slots updated:", allBookedSlots.size);
+                renderCalendar();
+                if (isAdminLoggedIn) { // Refresh admin table if admin is logged in
+                    renderAdminBookingsTable();
+                }
+            }, (error) => {
+                console.error("Error fetching all booked slots: ", error);
+            });
+        }
+
+        function getSlotsStatusForDay(dayDateStr) {
+            const dayDate = new Date(dayDateStr + 'T00:00:00Z');
+            const dayOfWeek = dayDate.getUTCDay();
+            if (!karolAvailability.weekdays.includes(dayOfWeek)) {
+                return { total: 0, booked: 0, available: 0, isWorkingDay: false };
+            }
+            const definedSlots = karolAvailability.slots;
+            let bookedCount = 0;
+            definedSlots.forEach(time => {
+                const slotId = formatSlotId(dayDateStr, time);
+                if (allBookedSlots.has(slotId)) {
+                    bookedCount++;
+                }
+            });
+            return {
+                total: definedSlots.length,
+                booked: bookedCount,
+                available: definedSlots.length - bookedCount,
+                isWorkingDay: true
+            };
+        }
+
+        function renderCalendar() {
+            // ... (Calendar rendering logic - largely unchanged, ensures it uses `allBookedSlots`)
+            // This function remains mostly the same as in the previous version,
+            // focusing on displaying day availability based on `allBookedSlots`.
+            // Key change: it doesn't highlight "my-booking" for clients since that view is removed.
+            if (!monthYearDisplay || !calendarDaysContainer) return;
+            calendarDaysContainer.innerHTML = '';
+            const year = currentDate.getFullYear();
+            const month = currentDate.getMonth();
+            monthYearDisplay.textContent = `${currentDate.toLocaleDateString('pt-BR', { month: 'long' })} ${year}`;
+
+            const firstDayOfMonth = new Date(Date.UTC(year, month, 1));
+            const lastDayOfMonth = new Date(Date.UTC(year, month + 1, 0));
+            const daysInMonth = lastDayOfMonth.getUTCDate();
+            const startDayOfWeek = firstDayOfMonth.getUTCDay();
+
+            const today = new Date();
+            const todayLocalStr = formatDateToYYYYMMDD(today);
+
+            for (let i = 0; i < startDayOfWeek; i++) {
+                calendarDaysContainer.appendChild(document.createElement('div')).classList.add('calendar-day', 'not-current-month');
+            }
+
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dayCell = document.createElement('div');
+                dayCell.classList.add('calendar-day', 'current-month');
+
+                const dayNumberSpan = document.createElement('span');
+                dayNumberSpan.classList.add('day-number');
+                dayNumberSpan.textContent = day;
+                dayCell.appendChild(dayNumberSpan);
+
+                const cellDateStr = formatDateToYYYYMMDD(new Date(year, month, day));
+                const bookingIndicatorSpan = document.createElement('span');
+                bookingIndicatorSpan.classList.add('day-booking-indicator');
+                const cellDateLocalForPastCheck = new Date(year, month, day, 23, 59, 59);
+
+                if (cellDateLocalForPastCheck < today && cellDateStr !== todayLocalStr) {
+                    dayCell.classList.add('past-day');
+                    bookingIndicatorSpan.textContent = 'Passado';
+                } else {
+                    const slotStatus = getSlotsStatusForDay(cellDateStr);
+                    if (!slotStatus.isWorkingDay) {
+                        bookingIndicatorSpan.textContent = 'Não Atende';
+                        dayCell.classList.add('past-day');
+                    } else if (slotStatus.available > 0) {
+                        bookingIndicatorSpan.textContent = `${slotStatus.available} Hor. Livres`;
+                        bookingIndicatorSpan.classList.add('all-available');
+                        dayCell.addEventListener('click', () => openTimeSlotModal(new Date(year, month, day)));
+                    } else if (slotStatus.total > 0 && slotStatus.available === 0) {
+                        bookingIndicatorSpan.textContent = 'Lotado';
+                        bookingIndicatorSpan.classList.add('some-booked');
+                        dayCell.style.cursor = 'not-allowed';
+                    } else {
+                        bookingIndicatorSpan.textContent = 'Indisponível';
+                        dayCell.style.cursor = 'not-allowed';
+                    }
+                }
+                dayCell.appendChild(bookingIndicatorSpan);
+
+                if (cellDateStr === todayLocalStr) {
+                    dayCell.classList.add('today-mark');
+                }
+                calendarDaysContainer.appendChild(dayCell);
+            }
+            const totalCells = startDayOfWeek + daysInMonth;
+            const remainingCells = (7 - (totalCells % 7)) % 7;
+            for (let i = 0; i < remainingCells; i++) {
+                calendarDaysContainer.appendChild(document.createElement('div')).classList.add('calendar-day', 'not-current-month');
+            }
+        }
+
+        function openTimeSlotModal(dateObjLocal) {
+            selectedDateForBooking = dateObjLocal;
+            modalDateDisplay.textContent = `Horários para ${dateObjLocal.toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' })}`;
+            timeSlotsContainer.innerHTML = '';
+            bookingConfirmationDiv.classList.add('hidden');
+            clientNameInput.value = '';
+
+            const dayOfWeek = dateObjLocal.getDay();
+            if (!karolAvailability.weekdays.includes(dayOfWeek)) {
+                timeSlotsContainer.innerHTML = '<p class="text-center text-gray-600">Não há atendimento neste dia da semana.</p>';
+                timeSlotModal.classList.add('active');
+                return;
+            }
+
+            const dateStr = formatDateToYYYYMMDD(dateObjLocal);
+            karolAvailability.slots.forEach(time => {
+                const slotId = formatSlotId(dateStr, time);
+                const slotButton = document.createElement('button');
+                slotButton.classList.add('time-slot');
+                slotButton.textContent = time;
+                slotButton.dataset.time = time;
+
+                if (allBookedSlots.has(slotId)) {
+                    slotButton.classList.add('booked');
+                    slotButton.disabled = true;
+                    slotButton.textContent += ' (Ocupado)';
+                } else {
+                    const now = new Date();
+                    const [hours, minutes] = time.split(':').map(Number);
+                    const slotDateTime = new Date(dateObjLocal.getFullYear(), dateObjLocal.getMonth(), dateObjLocal.getDate(), hours, minutes);
+
+                    if (slotDateTime < now) {
+                        slotButton.classList.add('unavailable');
+                        slotButton.textContent += ' (Passou)';
+                        slotButton.disabled = true;
+                    } else {
+                        slotButton.addEventListener('click', () => selectTimeSlot(time));
+                    }
+                }
+                timeSlotsContainer.appendChild(slotButton);
+            });
+            timeSlotModal.classList.add('active');
+        }
+
+        function selectTimeSlot(time) {
+            selectedTimeForBooking = time;
+            selectedSlotDisplay.textContent = `${time} em ${selectedDateForBooking.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' })}`;
+            bookingConfirmationDiv.classList.remove('hidden');
+            bookingConfirmationDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        if (closeModalBtn) closeModalBtn.addEventListener('click', () => timeSlotModal.classList.remove('active'));
+
+        if (confirmBookingBtn) confirmBookingBtn.addEventListener('click', async () => {
+            if (!currentUserId) { alert("Você precisa estar autenticado para agendar."); return; }
+            const clientName = clientNameInput.value.trim();
+            if (!clientName) { alert("Por favor, informe seu nome para o agendamento."); clientNameInput.focus(); return; }
+            if (!selectedDateForBooking || !selectedTimeForBooking) { alert("Erro: Data ou horário não selecionado."); return; }
+
+            const dateStr = formatDateToYYYYMMDD(selectedDateForBooking);
+            const slotId = formatSlotId(dateStr, selectedTimeForBooking);
+
+            confirmBookingBtn.disabled = true;
+            confirmBookingBtn.textContent = "Agendando...";
+
+            try {
+                const slotDocRef = doc(db, firestoreAgendaSlotsCollectionPath, slotId);
+                const docSnap = await getDoc(slotDocRef);
+                if (docSnap.exists()) {
+                    alert("Desculpe, este horário foi agendado por outra pessoa. Por favor, escolha outro.");
+                    openTimeSlotModal(selectedDateForBooking); // Re-open modal to show updated slots
+                } else {
+                    await setDoc(slotDocRef, {
+                        bookedBy: currentUserId, clientName: clientName, bookedAt: serverTimestamp(),
+                        date: dateStr, time: selectedTimeForBooking
+                    });
+                    alert(`Agendamento confirmado para ${clientName} em ${dateStr} às ${selectedTimeForBooking}! Para reagendar ou cancelar, por favor, entre em contato diretamente com a psicóloga.`);
+                    // No need to update allBookedSlots manually here, onSnapshot will do it.
+                    timeSlotModal.classList.remove('active');
+                }
+            } catch (error) {
+                console.error("Erro ao confirmar agendamento: ", error);
+                alert("Ocorreu um erro ao tentar agendar: " + error.message);
+            }
+            finally { confirmBookingBtn.disabled = false; confirmBookingBtn.textContent = "Confirmar Agendamento"; }
+        });
+
+        // --- Admin Panel Logic ---
+        if (adminLoginBtn) {
+            adminLoginBtn.addEventListener('click', () => {
+                if (adminPasswordInput.value === ADMIN_PASSWORD) {
+                    isAdminLoggedIn = true;
+                    adminLoginForm.classList.add('hidden'); // Hide login form
+                    adminLoginError.classList.add('hidden');
+                    adminBookingsPanel.classList.remove('hidden');
+                    renderAdminBookingsTable();
+                } else {
+                    adminLoginError.classList.remove('hidden');
+                    isAdminLoggedIn = false;
+                    adminBookingsPanel.classList.add('hidden');
+                }
+                adminPasswordInput.value = ''; // Clear password field
+            });
+        }
+
+        function renderAdminBookingsTable() {
+            if (!adminBookingsTbody || !adminBookingsLoading || !noAdminBookings) return;
+
+            adminBookingsLoading.classList.remove('hidden');
+            adminBookingsTbody.innerHTML = '';
+            noAdminBookings.classList.add('hidden');
+
+            const bookingsArray = Array.from(allBookedSlots.entries())
+                .map(([id, data]) => ({ id, ...data }))
+                .sort((a, b) => { // Sort by date and time
+                    const dateTimeA = new Date(`${a.date}T${a.time}`);
+                    const dateTimeB = new Date(`${b.date}T${b.time}`);
+                    return dateTimeA - dateTimeB;
+                });
+
+            if (bookingsArray.length === 0) {
+                noAdminBookings.classList.remove('hidden');
+            } else {
+                bookingsArray.forEach(booking => {
+                    const row = adminBookingsTbody.insertRow();
+                    const dateObj = new Date(booking.date + "T" + booking.time + ":00Z"); // Treat date as UTC for consistency
+
+                    row.insertCell().textContent = booking.clientName || 'N/A';
+                    row.insertCell().textContent = dateObj.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric', timeZone: 'UTC' });
+                    row.insertCell().textContent = booking.time;
+
+                    const cancelCell = row.insertCell();
+                    const cancelBtn = document.createElement('button');
+                    cancelBtn.textContent = 'Cancelar';
+                    cancelBtn.classList.add('admin-cancel-btn');
+                    cancelBtn.dataset.bookingId = booking.id;
+                    cancelBtn.addEventListener('click', handleAdminCancelBooking);
+                    cancelCell.appendChild(cancelBtn);
+                });
+            }
+            adminBookingsLoading.classList.add('hidden');
+        }
+
+        async function handleAdminCancelBooking(event) {
+            const bookingId = event.target.dataset.bookingId;
+            if (!bookingId || !confirm(`ADMIN: Tem certeza que deseja cancelar o agendamento ID: ${bookingId}?`)) return;
+            try {
+                event.target.disabled = true; event.target.textContent = "Cancelando...";
+                await deleteDoc(doc(db, firestoreAgendaSlotsCollectionPath, bookingId));
+                // Snapshot listener will update the table and calendar
+            } catch (error) {
+                console.error("Erro ao cancelar (admin): ", error);
+                alert("Não foi possível cancelar o agendamento (admin).");
+                event.target.disabled = false; event.target.textContent = "Cancelar";
+            }
+        }
+
+
+        function initializeCalendarApp() {
+            if (prevMonthBtn && nextMonthBtn) {
+                prevMonthBtn.addEventListener('click', () => { currentDate.setMonth(currentDate.getMonth() - 1); renderCalendar(); });
+                nextMonthBtn.addEventListener('click', () => { currentDate.setMonth(currentDate.getMonth() + 1); renderCalendar(); });
+            }
+            listenToAllBookedSlots(); // Listen to all slots for calendar and admin panel
+        }
+
+        const navbar = document.getElementById('navbar');
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const generalNavLinks = document.querySelectorAll('#navbar a[href^="#"], #mobile-menu a[href^="#"]');
+        let lastScrollTop = 0;
+        window.addEventListener('scroll', function () { let scrollTop = window.pageYOffset || document.documentElement.scrollTop; if (scrollTop > 50) { navbar.classList.add('navbar-scrolled'); } else { navbar.classList.remove('navbar-scrolled'); } lastScrollTop = scrollTop <= 0 ? 0 : scrollTop; });
+        if (mobileMenuButton && mobileMenu) { mobileMenuButton.addEventListener('click', function () { mobileMenu.classList.toggle('hidden'); mobileMenuButton.classList.toggle('open'); }); }
+        const generalMobileNavLinks = mobileMenu ? mobileMenu.querySelectorAll('a') : [];
+        generalMobileNavLinks.forEach(link => { link.addEventListener('click', () => { if (mobileMenu) mobileMenu.classList.add('hidden'); if (mobileMenuButton) mobileMenuButton.classList.remove('open'); }); });
+        const fadeInSections = document.querySelectorAll('.fade-in');
+        const observerOptions = { root: null, rootMargin: '0px', threshold: 0.1 };
+        const observer = new IntersectionObserver((entries, obs) => { entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('visible'); } }); }, observerOptions);
+        fadeInSections.forEach(section => { observer.observe(section); });
+        if (document.getElementById('currentYear')) document.getElementById('currentYear').textContent = new Date().getFullYear();
+        generalNavLinks.forEach(anchor => { anchor.addEventListener('click', function (e) { e.preventDefault(); const targetId = this.getAttribute('href'); const targetElement = document.querySelector(targetId); if (targetElement) { const navbarHeight = navbar ? navbar.offsetHeight : 0; const elementPosition = targetElement.getBoundingClientRect().top; const offsetPosition = elementPosition + window.pageYOffset - navbarHeight; window.scrollTo({ top: offsetPosition, behavior: 'smooth' }); } }); });
+        const contactForm = document.getElementById('contactForm');
+        if (contactForm) { contactForm.addEventListener('submit', function (event) { event.preventDefault(); const nome = document.getElementById('nome').value.trim(); const assunto = document.getElementById('assunto').value; const mensagem = document.getElementById('mensagem').value.trim(); if (!nome || !assunto || !mensagem) { alert('Por favor, preencha todos os campos do formulário.'); return; } const phoneNumber = "55XXXXXXXXXXX"; /* Karol DEVE substituir este número */ let whatsappMessage = `Olá, Karol Lemos! Meu nome é ${nome}. \n\n`; whatsappMessage += `Gostaria de falar sobre: *${assunto}*. \n\n`; whatsappMessage += `Mensagem: \n${mensagem}`; const encodedMessage = encodeURIComponent(whatsappMessage); const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`; window.open(whatsappUrl, '_blank'); }); }
+    </script>
+</body>
+
+</html>
